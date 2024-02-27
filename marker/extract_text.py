@@ -129,7 +129,9 @@ def get_text_blocks(doc, tess_lang: str, spell_lang: Optional[str], start_page, 
     else:
         range_start = 0
     if max_pages:
-        range_end = min(max_pages, len(doc))
+        range_end = min(start_page + max_pages, len(doc))
+    else:
+        range_end = len(doc)
     with ThreadPoolExecutor(max_workers=parallel) as pool:
         args_list = [(doc, pnum, tess_lang, spell_lang, no_text) for pnum in range(range_start, range_end)]
         if parallel == 1:
