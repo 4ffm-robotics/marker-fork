@@ -95,9 +95,9 @@ def filter_common_titles(merged_blocks: List[FullyMergedBlock]) -> List[FullyMer
             titles.append((text, i))
 
     bad_block_ids = find_overlap_elements(titles)
-
     new_blocks = []
     for i, block in enumerate(merged_blocks):
+        print (str(i) + ": " + str(block))
         if i in bad_block_ids:
             continue
         new_blocks.append(block)

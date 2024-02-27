@@ -58,6 +58,7 @@ def get_length_of_text(fname: str) -> int:
 def convert_single_pdf(
         fname: str,
         model_lst: List,
+        start_page=None,
         max_pages=None,
         metadata: Optional[Dict]=None,
         parallel_factor: int = 1
@@ -90,6 +91,7 @@ def convert_single_pdf(
         doc,
         tess_lang,
         spell_lang,
+        start_page=start_page,
         max_pages=max_pages,
         parallel=int(parallel_factor * settings.OCR_PARALLEL_WORKERS)
     )

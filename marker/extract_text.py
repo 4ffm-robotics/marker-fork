@@ -115,7 +115,7 @@ def convert_single_page(doc, pnum, tess_lang: str, spell_lang: Optional[str], no
     return page_obj, {"ocr_pages": ocr_pages, "ocr_failed": ocr_failed, "ocr_success": ocr_success}
 
 
-def get_text_blocks(doc, tess_lang: str, spell_lang: Optional[str], max_pages: Optional[int] = None, parallel: int = settings.OCR_PARALLEL_WORKERS):
+def get_text_blocks(doc, tess_lang: str, spell_lang: Optional[str], start_page, max_pages: Optional[int] = None, parallel: int = settings.OCR_PARALLEL_WORKERS):
     all_blocks = []
     toc = doc.get_toc()
     ocr_pages = 0
@@ -124,10 +124,14 @@ def get_text_blocks(doc, tess_lang: str, spell_lang: Optional[str], max_pages: O
     # This is a thread because most of the work happens in a separate process (tesseract)
     range_end = len(doc)
     no_text = len(naive_get_text(doc).strip()) == 0
+    if start_page:
+        range_start = start_page
+    else:
+        range_start = 0
     if max_pages:
         range_end = min(max_pages, len(doc))
     with ThreadPoolExecutor(max_workers=parallel) as pool:
-        args_list = [(doc, pnum, tess_lang, spell_lang, no_text) for pnum in range(range_end)]
+        args_list = [(doc, pnum, tess_lang, spell_lang, no_text) for pnum in range(range_start, range_end)]
         if parallel == 1:
             func = map
         else:
