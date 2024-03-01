@@ -140,7 +140,7 @@ def merge_lines(blocks, page_blocks: List[Page]):
             print ("Block type: " + block_type + "Block_line: " + str(block_text))
             # Join lines in the block together properly, exclude 2 headers that go one after another
             if (block_type == "Section-header" and prev_type == "Section-header"):
-                print("Block type: " + block_type + "AND: " + block_text + "\n")
+                print("Block type: " + block_type + " AND: " + block_text + "\n")
                 text_blocks.append(create_fully_merged_block(block_surround(block_text,block_type), block_type))
                 block_text = ""
 

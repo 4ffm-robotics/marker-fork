@@ -100,7 +100,8 @@ def filter_common_titles(merged_blocks: List[FullyMergedBlock]) -> List[FullyMer
         print (str(i) + ": " + str(block))
         if i in bad_block_ids:
             continue
-        if block.block_type in ["Section-header"] and "Acknowledgements" in block.text :
+        if block.block_type in ["Text", "Section-header"] and ('\n## Acknowledgments\n' in block.text or '\n## Acknowledgments\n' in block.text):
+        # if "Acknowledgments" in block.text :
             print("I FOUND A CULPRIT:", str(block))
             break
         new_blocks.append(block)
