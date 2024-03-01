@@ -81,7 +81,10 @@ def block_surround(text, block_type):
     elif block_type == "Table":
         text = "\n" + text + "\n"
     elif block_type == "List-item":
-        pass
+        if not text.startswith("#"):
+            text = "\n## " + text.strip().title() + "\n"
+        else:
+            pass
     elif block_type == "Code":
         text = "\n" + text + "\n"
     return text
@@ -134,12 +137,16 @@ def merge_lines(blocks, page_blocks: List[Page]):
     for page in blocks:
         for block in page:
             block_type = block.most_common_block_type()
+            print ("Block type: " + block_type + "Block_line: " + str(block_text))
+            # Join lines in the block together properly, exclude 2 headers that go one after another
+            if (block_type == "Section-header" and prev_type == "Section-header"):
+                print("Block type: " + block_type + "AND: " + block_text + "\n")
+                text_blocks.append(create_fully_merged_block(block_surround(block_text,block_type), block_type))
+                block_text = ""
+
             if block_type != prev_type and prev_type:
                 text_blocks.append(
-                    FullyMergedBlock(
-                        text=block_surround(block_text, prev_type),
-                        block_type=prev_type
-                    )
+                    create_fully_merged_block(block_surround(block_text, prev_type), block_type)
                 )
                 block_text = ""
 
@@ -158,13 +165,11 @@ def merge_lines(blocks, page_blocks: List[Page]):
 
     # Append the final block
     text_blocks.append(
-        FullyMergedBlock(
-            text=block_surround(block_text, prev_type),
-            block_type=block_type
-        )
+        create_fully_merged_block(block_surround(block_text, prev_type), block_type)
     )
     return text_blocks
-
+def create_fully_merged_block(text, block_type):
+    return FullyMergedBlock(text=text, block_type=block_type)
 
 def get_full_text(text_blocks):
     full_text = ""
