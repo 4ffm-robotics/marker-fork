@@ -143,7 +143,8 @@ def merge_lines(blocks, page_blocks: List[Page]):
                 print("Block type: " + block_type + " AND: " + block_text + "\n")
                 text_blocks.append(create_fully_merged_block(block_surround(block_text,block_type), block_type))
                 block_text = ""
-
+            if block_type == "Table":
+                break
             if block_type != prev_type and prev_type:
                 text_blocks.append(
                     create_fully_merged_block(block_surround(block_text, prev_type), block_type)
