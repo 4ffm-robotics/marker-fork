@@ -63,10 +63,17 @@ def merge_spans(blocks):
 
     return merged_blocks
 
+def remove_extra_spaces(text):
+    return re.sub(r'(?<=\S) (?=\S)', '', text)
 
 def block_surround(text, block_type):
     if block_type == "Section-header":
         if not text.startswith("#"):
+            # Check if there are repetitive spaces between each character
+            text = text.strip()
+            pattern = r'^[A-Z](\s+[A-Z])+\s*$'
+            if re.match(pattern, text):
+                text = remove_extra_spaces(text)
             text = "\n## " + text.strip().title() + "\n"
     elif block_type == "Title":
         if not text.startswith("#"):
